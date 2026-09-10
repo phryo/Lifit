@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -721,6 +722,16 @@ export default function LifitApp() {
                   今月の重点 · {plan.recommendations.length}アクション
                 </span>
               </div>
+              <Link href="/action-guides" className="action-guide-banner">
+                <BookOpen size={28} />
+                <span>
+                  <strong>具体的なやり方を見る</strong>
+                  <small>
+                    食事や運動のアイデアから、できそうな一歩を見つけよう。
+                  </small>
+                </span>
+                <ArrowRight size={24} />
+              </Link>
               <div className="plan-intro">
                 <div>
                   <span className="eyebrow">THIS MONTH’S FOCUS</span>
@@ -752,10 +763,14 @@ export default function LifitApp() {
                       <h2>{r.title}</h2>
                       <p>{r.subtitle}</p>
                       <span>
-                        具体的なやり方を見る
+                        アクションの説明を見る
                         <ArrowUpRight size={16} />
                       </span>
                     </button>
+                    <Link href="/action-guides" className="button dark full">
+                      具体的なやり方を見る
+                      <ArrowRight size={16} />
+                    </Link>
                     <div className="action-footer">
                       <button
                         className="text-button"
@@ -1091,6 +1106,10 @@ export default function LifitApp() {
                     <li key={s}>{s}</li>
                   ))}
                 </ol>
+                <Link href="/action-guides" className="button dark full">
+                  食事・運動の具体的なやり方を見る
+                  <ArrowRight size={16} />
+                </Link>
               </div>
               {[
                 ["期待できること", selectedAction.expectedEffect],
