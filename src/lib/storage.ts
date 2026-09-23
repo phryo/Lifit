@@ -1,6 +1,26 @@
 import { AppState, UserData } from "./types";
 import { demoUsers, sampleUser, metrics } from "./mock-data";
 export const STORAGE_KEY = "lifit-prototype-v1";
+function validHealthAgeContext(value: unknown): boolean {
+  if (value === undefined) return true; // Backwards compatible; no fabricated facts.
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  return Object.entries(value).every(([key, item]) => {
+    if (item === undefined) return true;
+    if (key === "age") return typeof item === "number" && Number.isFinite(item);
+    if (key === "sex") return item === "male" || item === "female";
+    return (
+      [
+        "diabetes",
+        "proteinuria",
+        "smoking",
+        "regularExercise",
+        "cardiovascularHistory",
+        "japanesePopulation",
+        "fastingSample",
+      ].includes(key) && typeof item === "boolean"
+    );
+  });
+}
 export function initialState(): AppState {
   return {
     version: 1,
@@ -44,6 +64,7 @@ export function isValidState(value: unknown): value is AppState {
           typeof c.date === "string" &&
           /^\d{4}-\d{2}-\d{2}$/.test(c.date) &&
           c.metrics &&
+          validHealthAgeContext(c.healthAgeContext) &&
           typeof c.metrics === "object" &&
           Object.entries(c.metrics).every(
             ([key, value]) =>

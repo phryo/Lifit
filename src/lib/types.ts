@@ -47,6 +47,11 @@ export interface HealthCheck {
   date: string;
   metrics: Partial<Record<MetricId, number>>;
   source: "sample" | "manual";
+  /** Snapshot at examination time. Older saved checks remain unknown. */
+  healthAgeContext?: Omit<
+    import("./health-age/types").HealthAgeInput,
+    "systolicBloodPressure" | "ldl" | "hdl" | "triglycerides"
+  >;
 }
 export interface HealthAssessment {
   id: string;

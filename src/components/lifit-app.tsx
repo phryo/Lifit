@@ -1,4 +1,5 @@
 "use client";
+import HealthAgeCard from "./health-age-card";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -524,6 +525,9 @@ export default function LifitApp() {
                     <ArrowRight size={16} />
                   </button>
                 </section>
+                {loaded && (
+                  <HealthAgeCard check={check} onAdd={() => setFlow("edit")} />
+                )}
                 <section className="overview">
                   <div className="section-heading">
                     <div>

@@ -449,6 +449,22 @@ export function sampleUser(profile: UserProfile): UserData {
         date: localDate(today),
         source: "sample",
         metrics: values,
+        // Explicit synthetic examination facts, never inferred from lab values.
+        // A demonstrates missing proteinuria; B complete; C out of age range.
+        healthAgeContext: {
+          age: profile.age,
+          sex:
+            profile.sex === "male" || profile.sex === "female"
+              ? profile.sex
+              : undefined,
+          cardiovascularHistory: false,
+          japanesePopulation: true,
+          fastingSample: true,
+          diabetes: false,
+          proteinuria: profile.id === "demo-a" ? undefined : false,
+          smoking: false,
+          regularExercise: false,
+        },
       },
     ],
     logs: [],

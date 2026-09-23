@@ -12,6 +12,8 @@ import { HealthCheck, UserProfile } from "@/lib/types";
 import { demoUsers, localDate, metrics, sampleUser } from "@/lib/mock-data";
 import { calculateBMI } from "@/lib/services";
 import { Brand } from "./ui";
+import HealthAgeFields from "./health-age-fields";
+import type { HealthAgeInput } from "@/lib/health-age/types";
 export default function EntryFlow({
   profile,
   editing = false,
@@ -34,6 +36,7 @@ export default function EntryFlow({
   const [date, setDate] = useState(localDate());
   const [error, setError] = useState("");
   const [sample, setSample] = useState(false);
+  const [riskContext, setRiskContext] = useState<HealthAgeInput>({});
   function changeProfile(key: keyof UserProfile, value: string) {
     setP((prev) => ({
       ...prev,
@@ -75,6 +78,11 @@ export default function EntryFlow({
         date,
         metrics: computed,
         source: sample ? "sample" : "manual",
+        healthAgeContext: {
+          ...riskContext,
+          age: p.age,
+          sex: p.sex === "male" || p.sex === "female" ? p.sex : undefined,
+        },
       },
     );
   }
@@ -403,6 +411,43 @@ export default function EntryFlow({
                     </div>
                   </section>
                 ))}
+                <section className="card form-section">
+                  <h2>健康年齢のための追加情報</h2>
+                  <p className="field-note">
+                    今回の健診時点の情報を入力してください。過去の健診情報を自動で引き継ぐことはありません。
+                  </p>
+                  <div className="form-grid">
+                    <label>
+                      健診時の年齢
+                      <input
+                        type="number"
+                        min="18"
+                        max="120"
+                        value={p.age ?? ""}
+                        onChange={(e) => changeProfile("age", e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      モデルで用いる性別
+                      <select
+                        value={p.sex}
+                        onChange={(e) => changeProfile("sex", e.target.value)}
+                      >
+                        <option value="unspecified">回答しない</option>
+                        <option value="male">男性</option>
+                        <option value="female">女性</option>
+                        <option value="other">その他</option>
+                      </select>
+                    </label>
+                  </div>
+                  <HealthAgeFields
+                    value={riskContext}
+                    onChange={(value) => {
+                      setRiskContext(value);
+                      setSample(false);
+                    }}
+                  />
+                </section>
                 {sample && (
                   <p className="success-note">
                     <Check size={16} />
